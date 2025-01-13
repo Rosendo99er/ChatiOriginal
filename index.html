@@ -6576,7 +6576,7 @@
           errorElement.innerHTML = `
             <p>Leider konnte ich Ihre Anfrage aufgrund einer Verbindungsstörung oder Zeitüberschreitung noch nicht beantworten. Bitte versuchen Sie es erneut oder wenden Sie sich an den Kundenservice.</p>
             <p></p>
-            <a href=\"#\" id=\"FmpRateT\" class=\"send-email-link\"\">Erneut versuchen</a>
+            <a href=\"#\" id=\"other\" class=\"send-email-link\"\">Erneut versuchen</a>
           `;
           messagesElement.appendChild(errorElement);
   
@@ -7589,7 +7589,7 @@
           errorElement.innerHTML = `
             <p>Leider konnte ich Ihre Anfrage aufgrund einer Verbindungsstörung oder Zeitüberschreitung noch nicht beantworten. Bitte versuchen Sie es erneut oder wenden Sie sich an den Kundenservice.</p>
             <p></p>
-            <a href=\"#\" id=\"FmpRateT\" class=\"send-email-link\"\">Erneut versuchen</a>
+            <a href=\"#\" id=\"other\" class=\"send-email-link\"\">Erneut versuchen</a>
           `;
           messagesElement.appendChild(errorElement);
   
@@ -8435,7 +8435,7 @@ async function openConfirmationModal() {
 document.addEventListener('click', async function(event) {
     const target = event.target;
 
-    const allowedIds = ['FmpRateRP', 'WQ_A1', 'WQ_A2', 'WQ_A3', 'WQ_A4'];
+    const allowedIds = ['FmpRateRP', 'WQ_A1', 'sendEmail', 'WQ_A3', 'WQ_A4'];
 
     if (target.classList.contains('send-email-link') && allowedIds.includes(target.id)) {
         event.preventDefault(); // Standard-Link-Verhalten verhindern
@@ -8528,14 +8528,15 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     }
   
-    function checkForSuggestedLink() {
-        const lastBotMessage = document.querySelector('.bot-message:last-child');
-        if (!lastBotMessage) {
-            console.warn('Keine .bot-message gefunden!');
-            return; // Beende die Funktion, wenn keine Nachricht vorhanden ist
-        }
-        updateInputState('.suggested-link');
-    }
+    //function checkForSuggestedLink() {
+    //    const lastBotMessage = document.querySelector('.bot-message:last-child');
+    //    if (!lastBotMessage) {
+    //        console.warn('Keine .bot-message gefunden!');
+    //        return; // Beende die Funktion, wenn keine Nachricht vorhanden ist
+    //    }
+    //    updateInputState('.suggested-link');
+    //}
+
 
     function checkForSendEmailLink() {
         const lastBotMessage = document.querySelector('.bot-message:last-child');
@@ -8543,8 +8544,34 @@ document.addEventListener("DOMContentLoaded", function () {
             console.warn('Keine .bot-message gefunden!');
             return;
         }
-        updateInputState('.send-email-link');
+
+        // Suche nach einem Link mit der Klasse 'send-email-link' innerhalb der letzten Bot-Nachricht
+        const sendEmailLink = lastBotMessage.querySelector('.send-email-link');
+        if (!sendEmailLink) {
+            console.warn('Kein send-email-link in der letzten Bot-Nachricht gefunden!');
+            return;
+        }
+
+        // Prüfen, ob die ID des Links ungleich "other" ist
+        if (sendEmailLink.id !== 'other') {
+            updateInputState('.send-email-link'); // Aufruf nur, wenn die ID nicht "other" ist
+        } else {
+            console.info('Die ID ist "other". updateInputState wird nicht aufgerufen.');
+        }
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     // Beobachte Änderungen im DOM (für neue bot-messages)
     const observer = new MutationObserver(() => {
